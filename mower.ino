@@ -1,17 +1,23 @@
 #include <TaskScheduler.h> 
 #include "globals.h"
 #include "wheel.h"
-// #include "physWheel.h"
+#include "physWheel.h"
 #include "sensoractions.h"
-#include "moweractions.h" 
+
+
+wheel leftWheel, rightWheel;
+
 
 Task  RecalculateSpeed(SchedTicks,TASK_FOREVER, &RecalculateSpeedCB);
 Task  MainStateMachine(50,TASK_FOREVER, &StateMachineCB);
-wheel leftWheel, rightWheel;
+
 void  (*HandleState[NUM_STATES])();
- 
+
+
 State mowerState;
 Scheduler runner;
+ 
+#include "moweractions.h"  
 
 void RecalculateSpeedCB(){ 
   leftWheel.AdjustSpeed();
