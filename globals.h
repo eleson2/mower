@@ -1,9 +1,6 @@
 #ifndef _globals_h
 #define _globals_h
 
-#define RIGHT 1
-#define LEFT  0
-
 //Typedefs
 // typedef unsigned int Time;
 typedef enum  {
@@ -16,6 +13,11 @@ typedef enum  {
   BWF_COLLISION_STATE,
   NUM_STATES
 } State;
+
+typedef enum {
+  Left = 0,
+  Right 
+} Side ;
 
 // Constants
 const int MaxSpeed =255<<7;
@@ -34,7 +36,7 @@ const int Speed00 =  0;
 
 
 int SchedTicks = 50; // # of msec between speed adjustments
-int seqNumber=0;
+int seqNumber = 0;
 
 // State mowerState;
 #endif 

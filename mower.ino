@@ -1,14 +1,19 @@
 #include <TaskScheduler.h> 
 #include "globals.h"
 #include "wheel.h"
-#include "physWheel.h"
+
 #include "sensoractions.h"
 
 
-wheel leftWheel, rightWheel;
+wheel leftWheel(Left), 
+      rightWheel(Right);
 
 
-Task  RecalculateSpeed(SchedTicks,TASK_FOREVER, &RecalculateSpeedCB);
+void wait(int a);
+void RecalculateSpeedCB();
+void StateMachineCB();
+
+Task  RecalculateSpeed(SchedTicks,TASK_FOREVER, RecalculateSpeedCB);
 Task  MainStateMachine(50,TASK_FOREVER, &StateMachineCB);
 
 void  (*HandleState[NUM_STATES])();
@@ -22,8 +27,10 @@ Scheduler runner;
 void RecalculateSpeedCB(){ 
   leftWheel.AdjustSpeed();
   rightWheel.AdjustSpeed();
-  motorControl(leftWheel.Speed(),rightWheel.Speed());
+  leftWheel.SendSpeed();
+  rightWheel.SendSpeed();
 };
+
 
 inline bool Completed() { return !RecalculateSpeed.isEnabled(); };
 

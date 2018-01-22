@@ -3,11 +3,11 @@
 #include "globals.h"
 
 
-int GetWireSide() { 
+Side GetWireSide() { 
   if (1 /*rightSensorActivated()*/){
-    return RIGHT;}
+    return Right;}
   else {
-    return LEFT;
+    return Left;
   };
 };
 

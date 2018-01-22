@@ -7,7 +7,7 @@
  * Set a new target speed and how long time it should take to reach it.
  */
 void mowerCommand(int LSpeed,int RSpeed,int t){
-    int i = t /SchedTicks;
+    int i = t / SchedTicks;
     if (i<=0) i=1;
 
     leftWheel.setTargetSpeed(LSpeed,i);
@@ -79,14 +79,14 @@ void straightCutting() {
   };
 
   void BWFTurn() {
-    static unsigned char BWFSide; // Remember where the wire is.
+    Side BWFSide; // Remember where the wire is.
   
     switch(seqNumber) {
         case 0 :
             BWFSide = GetWireSide();
             break;
         case 1 :
-            if (BWFSide == RIGHT) { 
+            if (BWFSide == Right) { 
                 mowerCommand(Speed20,Speed80,1500 ); // Turn!    
             } else {
                 mowerCommand(Speed80,Speed20,1500 ); // Turn!    
