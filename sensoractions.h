@@ -5,7 +5,8 @@
 
 Side GetWireSide() { 
   if (1 /*rightSensorActivated()*/){
-    return Right;}
+    return Right;
+  }
   else {
     return Left;
   };

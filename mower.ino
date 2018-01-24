@@ -34,8 +34,6 @@ void inintRecalulateTask(int i ){
 void RecalculateSpeedCB(){ 
   leftWheel.ReCalcSpeed();
   rightWheel.ReCalcSpeed();
-  //leftWheel.SendSpeed();
-  //rightWheel.SendSpeed();
 };
 
 inline bool Completed() { return !RecalculateSpeed.isEnabled(); };
