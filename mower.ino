@@ -1,17 +1,23 @@
 #include <TaskScheduler.h> 
 #include "globals.h"
 #include "wheel.h"
-
 #include "sensoractions.h"
-
-
-wheel leftWheel(Left), 
-      rightWheel(Right);
-
 
 void wait(int a);
 void RecalculateSpeedCB();
 void StateMachineCB();
+void inintRecalulateTask(int i );
+
+const int SchedTicks = 50;  // # of msec between speed adjustments
+int seqNumber = 0;
+
+wheel leftWheel(Left), 
+      rightWheel(Right);
+
+State mowerState;
+Scheduler runner;
+
+#include "moweractions.h"  
 
 Task  RecalculateSpeed(SchedTicks,TASK_FOREVER, RecalculateSpeedCB);
 Task  MainStateMachine(50,TASK_FOREVER, &StateMachineCB);
@@ -19,18 +25,18 @@ Task  MainStateMachine(50,TASK_FOREVER, &StateMachineCB);
 void  (*HandleState[NUM_STATES])();
 
 
-State mowerState;
-Scheduler runner;
  
-#include "moweractions.h"  
+void inintRecalulateTask(int i ){
+  RecalculateSpeed.setIterations(i);
+  RecalculateSpeed.enableDelayed();
+}
 
 void RecalculateSpeedCB(){ 
-  leftWheel.AdjustSpeed();
-  rightWheel.AdjustSpeed();
-  leftWheel.SendSpeed();
-  rightWheel.SendSpeed();
+  leftWheel.ReCalcSpeed();
+  rightWheel.ReCalcSpeed();
+  //leftWheel.SendSpeed();
+  //rightWheel.SendSpeed();
 };
-
 
 inline bool Completed() { return !RecalculateSpeed.isEnabled(); };
 

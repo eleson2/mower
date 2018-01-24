@@ -17,10 +17,8 @@ public:
   wheel(Side);
   void ReCalcSpeed(); 
   void setTargetSpeed( int Speed, int iterations);
-  void AdjustSpeed(void);
   int  TargetSpeed(void) ;
   int  Speed(); 
-  void SendSpeed();
 };
 
 

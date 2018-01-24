@@ -35,8 +35,5 @@ const int Speed10 = .1 * MaxSpeed;
 const int Speed00 =  0;
 
 
-int SchedTicks = 50; // # of msec between speed adjustments
-int seqNumber = 0;
-
 // State mowerState;
 #endif 

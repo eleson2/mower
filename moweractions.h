@@ -12,8 +12,7 @@ void mowerCommand(int LSpeed,int RSpeed,int t){
 
     leftWheel.setTargetSpeed(LSpeed,i);
     rightWheel.setTargetSpeed(RSpeed,i);
-    RecalculateSpeed.setIterations(i);
-    RecalculateSpeed.enableDelayed();
+    inintRecalulateTask(i);
 };
 
 void StartCutting(int t){
@@ -121,10 +120,13 @@ void straightCutting() {
             break;
         case 1:
             mowerCommand(-Speed70,-Speed50,800);
+            break;
         case 2:
             mowerCommand(Speed90,MaxSpeed,15000);
+            break;
         case 3:
             mowerCommand(-Speed70,-Speed50,1400);
+            break;
         default:
             wait(TASK_FOREVER);
     };
