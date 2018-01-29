@@ -3,13 +3,15 @@
 #include "wheel.h"
 #include "sensoractions.h"
 
-void wait(int a);
+
+const int8_t SchedTicks = 50;  // # of msec between speed adjustments
+int seqNumber = 0;
+void  (*HandleState[NUM_STATES])();
+
 void RecalculateSpeedCB();
 void StateMachineCB();
-void inintRecalulateTask(int i );
+void SetDuration(int i);
 
-const int SchedTicks = 50;  // # of msec between speed adjustments
-int seqNumber = 0;
 
 wheel leftWheel(Left), 
       rightWheel(Right);
@@ -22,11 +24,9 @@ Scheduler runner;
 Task  RecalculateSpeed(SchedTicks,TASK_FOREVER, RecalculateSpeedCB);
 Task  MainStateMachine(50,TASK_FOREVER, &StateMachineCB);
 
-void  (*HandleState[NUM_STATES])();
+// mowerPath    &currentAction = &straightCutting; 
 
-
- 
-void inintRecalulateTask(int i ){
+void SetDuration(int i ){
   RecalculateSpeed.setIterations(i);
   RecalculateSpeed.enableDelayed();
 }
@@ -36,29 +36,21 @@ void RecalculateSpeedCB(){
   rightWheel.ReCalcSpeed();
 };
 
-inline bool Completed() { return !RecalculateSpeed.isEnabled(); };
-
 void StateMachineCB() {
-  if (!Completed()) return;  // allow previous request to complete
-  HandleState[mowerState];
-};
+  if (RecalculateSpeed.isEnabled()) return;  // allow previous request to complete
 
-
-
-void wait(int a) {
-  RecalculateSpeed.setIterations(a);
-  RecalculateSpeed.enableDelayed();
+  (*HandleState[mowerState])();
 };
 
 void setup() {
   //define callbacks for Task
   //    HandleState[CUTTING_STATE] = &straightCutting€;
-  HandleState[CUTTING_STATE] = HandleCollision;
-  HandleState[CUTTING_COLLISION_STATE] = HandleCollision;
-  HandleState[BWF_BACKOUT_STATE] = straightCutting;
-  HandleState[BWF_TURN_STATE] = straightCutting;
-  HandleState[FIND_BWF_STATE] = straightCutting;
-  HandleState[BWF_COLLISION_STATE] = straightCutting;
+  HandleState[CUTTING_STATE] = &HandleCollision;
+  HandleState[CUTTING_COLLISION_STATE] = &HandleCollision;
+  HandleState[BWF_BACKOUT_STATE] = &straightCutting;
+  HandleState[BWF_TURN_STATE] = &straightCutting;
+  HandleState[FIND_BWF_STATE] = &straightCutting;
+  HandleState[BWF_COLLISION_STATE] = &straightCutting;
 
   // put your setup code here, to run once:
   runner.init();
