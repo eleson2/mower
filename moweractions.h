@@ -1,9 +1,10 @@
+
 #ifndef moweractions_h
 #define moweractions_h
 #include "globals.h"
-// #include "moweractionsClass.h"
 
 /* Set a new target speed and how long time it should take to reach it. */
+
 void mowerCommand(int LSpeed,int RSpeed,int t){
     int i = t / SchedTicks;
     if (i<=0) i=1;
@@ -130,4 +131,5 @@ void straightCutting() {
     };
     seqNumber++;
   };
+
 #endif
