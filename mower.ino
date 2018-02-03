@@ -44,12 +44,14 @@ void StateMachineCB() {
 
 void setup() {
   //define callbacks for Task
-  //    HandleState[CUTTING_STATE] = &straightCutting€;
-  HandleState[CUTTING_STATE] = &HandleCollision;
+  HandleState[CUTTING_STATE] = &straightCutting;
+  //HandleState[CUTTING_STATE] = &HandleCollision;
   HandleState[CUTTING_COLLISION_STATE] = &HandleCollision;
-  HandleState[BWF_BACKOUT_STATE] = &straightCutting;
-  HandleState[BWF_TURN_STATE] = &straightCutting;
-  HandleState[FIND_BWF_STATE] = &straightCutting;
+  HandleState[BWF_BACKOUT_STATE] = &BWFBackout;
+  HandleState[BWF_TURN_STATE] = &BWFTurn;
+  HandleState[CIRCLE_STATE] = &Circle;
+  HandleState[FIND_BWF_STATE] = &FindBWF;
+  HandleState[GOING_HOME] = &straightCutting;
   HandleState[BWF_COLLISION_STATE] = &straightCutting;
 
   // put your setup code here, to run once:

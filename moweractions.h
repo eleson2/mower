@@ -17,7 +17,7 @@ void mowerCommand(int LSpeed,int RSpeed,int t){
 void StartCutting(int t){
     if (t<=0) { t=1; }; 
     mowerState = CUTTING_STATE;
-    seqNumber = 0;
+    seqNumber = -1;
     mowerCommand(Speed90,Speed90,t);
 };
 
@@ -77,7 +77,7 @@ void straightCutting() {
   };
 
   void BWFTurn() {
-    Side BWFSide; // Remember where the wire is.
+    static Side BWFSide; // Remember where the wire is.
   
     switch(seqNumber) {
         case 0 :
@@ -92,6 +92,7 @@ void straightCutting() {
             break;
         default : 
             StartCutting(1000);  // Set mowerState to Cutting 
+            //BWFSide = Left;
     };
     seqNumber++; // Advance to next phase
   };
