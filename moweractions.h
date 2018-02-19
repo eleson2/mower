@@ -122,10 +122,10 @@ void straightCutting() {
             mowerCommand(-Speed70,-Speed50,800);
             break;
         case 2:
-            mowerCommand(Speed90,MaxSpeed,15000);
+            mowerCommand(Speed90,MaxSpeedFwd,30000);
             break;
         case 3:
-            mowerCommand(-Speed70,-Speed50,1400);
+            mowerCommand(MaxSpeedFwd,MaxSpeedFwd,1000);
             break;
         default:
             SetDuration(TASK_FOREVER);
