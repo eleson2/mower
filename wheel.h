@@ -1,28 +1,20 @@
-#ifndef wheel_h
-#define wheel_h
+#ifndef _Wheel_h
+#define _Wheel_h
 
-#include "Arduino.h"
 #include "globals.h"
+#include "Arduino.h"
 
-// #include "physWheel.h"
-
-class wheel {
+class Wheel {
 private:
-  int  TargetSpd;
-  int  CurrSpd;
+  int  TargetSpeed;
+  int  CurSpeed;
   int  SpeedIncrement;
-  Side WheelSide;
+  Side WheelID;
 public:
-  wheel();
-  wheel(Side);
-  void ReCalcSpeed(); 
+  Wheel();
+  Wheel(Side);
+  void SetSide(Side);
+  void EmitNewSpeed(); 
   void setTargetSpeed( int Speed, int iterations);
-  int  TargetSpeed(void) ;
-  int  Speed(); 
 };
-
-
-
-
-
-#endif 
+#endif

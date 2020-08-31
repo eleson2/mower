@@ -1,30 +1,40 @@
-#include "wheel.h"
+#include "Wheel.h"
 
-wheel::wheel(){
-  CurrSpd = 0;
-  TargetSpd = 0;
+/* Speed is in the range of -32640 - +32640
+ *  (255 << 7 ) 
+ *  Analog write sends 8-bit 
+ */
+Wheel::Wheel(){
+  CurSpeed = 0;
+  TargetSpeed = 0;
   SpeedIncrement = 0;
+  //
+  pinMode(LED_BUILTIN, OUTPUT);
 };
 
-wheel::wheel(Side s){
-  WheelSide = s;
-  wheel();
+Wheel::Wheel(Side s){
+  WheelID = s;
+  Wheel();
 };
 
-void wheel::setTargetSpeed( int Speed, int iterations) {
-  TargetSpd = Speed;
-  SpeedIncrement = (CurrSpd - TargetSpd)/iterations; 
+void Wheel::SetSide(Side s) { WheelID = s; };
+
+void Wheel::setTargetSpeed( int Speed, int iterations) {
+  TargetSpeed = Speed;
+  SpeedIncrement = (CurSpeed - TargetSpeed)/iterations;
 };
 
-int  wheel::TargetSpeed() { return TargetSpd; };
-int  wheel::Speed()       { return CurrSpd; };
-
-void wheel::ReCalcSpeed() {
-  CurrSpd += SpeedIncrement;
-  int Pin = (WheelSide == Left) ? 1 : 0;  // Left pin# , Right Pin# 
-  //int Direction = (CurrSpd > 0) ? 1 : 0; 
-  int spd = 255 - (CurrSpd >> 7); 
-  if (spd < 0) spd = 0;
-  
-  analogWrite(Pin, spd);
+void Wheel::EmitNewSpeed() {
+  CurSpeed += SpeedIncrement;
+  int spd = (CurSpeed >> 7); 
+  if (spd < 0) {
+    spd = -spd;
+    digitalWrite(WheelID,HIGH); // Set Direction
+    digitalWrite(WheelID,HIGH); 
+    analogWrite(WheelID, spd);  // Set Speed
+  } else {
+    digitalWrite(WheelID,HIGH); // Set Direction
+    digitalWrite(WheelID,HIGH); 
+    analogWrite(WheelID, spd);  // Set Speed
+  };
 };

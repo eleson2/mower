@@ -1,71 +1,54 @@
-#include <TaskScheduler.h> 
 #include "globals.h"
-#include "wheel.h"
-#include "sensoractions.h"
+#include <TaskScheduler.h> 
+#include "Wheel.h"
+#include "Movement.h"
+#include "interrupts.h" 
+//#include "sensoractions.h"
 
+const int8_t SchedTicks = 10;  // # of msec between speed adjustments
+int mov_seqNumber = 0;
 
-const int8_t SchedTicks = 50;  // # of msec between speed adjustments
-int seqNumber = 0;
-void  (*HandleState[NUM_STATES])();
+// Volatile indicators
+volatile int BWFDetected;
+volatile int CollisionDetected;
 
-void RecalculateSpeedCB();
-void StateMachineCB();
-void SetDuration(int i);
-
-
-wheel leftWheel(Left), 
-      rightWheel(Right);
-
+Wheel leftWheel(Left);
+Wheel rightWheel(Right);
 State mowerState;
+ActionFn Action;
 Scheduler runner;
 
-#include "moweractions.h"  
+// Adjusts the speed of each wheel with current increment
+// and emits it to wheel control.
+Task UpdateSpeed(SchedTicks,TASK_FOREVER,mov_UpdateMovement,&runner,false,NULL,InitNextAction);
 
-Task  RecalculateSpeed(SchedTicks,TASK_FOREVER, RecalculateSpeedCB);
-Task  MainStateMachine(50,TASK_FOREVER, &StateMachineCB);
-
-// mowerPath    &currentAction = &straightCutting; 
-
-void SetDuration(int i ){
-  RecalculateSpeed.setIterations(i);
-  RecalculateSpeed.enableDelayed();
-}
-
-void RecalculateSpeedCB(){ 
-  leftWheel.ReCalcSpeed();
-  rightWheel.ReCalcSpeed();
+void SetDuration(int i) {
+   UpdateSpeed.setIterations(i);
+   UpdateSpeed.restartDelayed();
 };
 
-void StateMachineCB() {
-  if (RecalculateSpeed.isEnabled()) return;  // allow previous request to complete
-
-  (*HandleState[mowerState])();
+void SensorActivatedCB(Sensor s) {
+   mov_BWF_Detected(Left);
+   // Do stuff
 };
 
 void setup() {
-  //define callbacks for Task
-  HandleState[CUTTING_STATE] = &straightCutting;
-  //HandleState[CUTTING_STATE] = &HandleCollision;
-  HandleState[CUTTING_COLLISION_STATE] = &HandleCollision;
-  HandleState[BWF_BACKOUT_STATE] = &BWFBackout;
-  HandleState[BWF_TURN_STATE] = &BWFTurn;
-  HandleState[CIRCLE_STATE] = &Circle;
-  HandleState[FIND_BWF_STATE] = &FindBWF;
-  HandleState[GOING_HOME] = &straightCutting;
-  HandleState[BWF_COLLISION_STATE] = &straightCutting;
-
-  // put your setup code here, to run once:
-  runner.init();
-
-  runner.addTask(RecalculateSpeed);
-  runner.addTask(MainStateMachine);
-
-  delay(2000);
-
-  RecalculateSpeed.enable();
-  MainStateMachine.enable();
+   setupIRQ();
+   mov_Movement(SchedTicks); 
+   SetSensorCallback(&SensorActivatedCB);
+   runner.init();
+   runner.addTask(UpdateSpeed);
+   delay(200);
+   UpdateSpeed.enable();
 };
 
 void loop() {
-  runner.execute();
+   runner.execute();
+   if(BWFDetected) {
+      mov_seqNumber = 0;
+      mov_SetAction(&mov_BWFBackout);
+   } else if (CollisionDetected) {
+      mov_seqNumber = 0;
+      mov_SetAction(&mov_HandleCollision);
+   };
 };

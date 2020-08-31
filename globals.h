@@ -1,8 +1,9 @@
 #ifndef _globals_h
 #define _globals_h
+#include <TaskSchedulerDeclarations.h>
 
 //Typedefs
-// typedef unsigned int Time;
+
 typedef enum  {
   CUTTING_STATE = 0,
   CUTTING_COLLISION_STATE,
@@ -12,29 +13,40 @@ typedef enum  {
   FIND_BWF_STATE,
   GOING_HOME,
   BWF_COLLISION_STATE,
+  BWF_DETECTED,
   NUM_STATES
 } State;
 
+typedef enum  {
+  BWF_LEFT = 0,
+  BW_RIGHT,
+  LIFTED,
+  NUM_SENSORS
+} Sensor;
+
 typedef enum {
-  Left = 0,
-  Right 
-} Side ;
+  Left = 25,
+  Right = 31
+}  Side;
+
+typedef unsigned int Time;
+typedef void (*sensorActivatedCB)(Sensor s);
+typedef void (*ActionFn)();
+typedef void (*DurationCB)(int i);
 
 // Constants
-const int MaxSpeed =255<<7;
-const int MaxSpeedFwd = MaxSpeed;
-const int MaxSpeedBkwd = - MaxSpeed;
-const int Speed90 = .9 * MaxSpeed;
-const int Speed80 = .8 * MaxSpeed;
-const int Speed70 = .7 * MaxSpeed;
-const int Speed60 = .6 * MaxSpeed;
-const int Speed50 = .5 * MaxSpeed;
-const int Speed40 = .4 * MaxSpeed;
-const int Speed30 = .3 * MaxSpeed;
-const int Speed20 = .2 * MaxSpeed;
-const int Speed10 = .1 * MaxSpeed;
-const int Speed00 =  0;
+constexpr int MaxSpeed =255<<7;
+constexpr int MaxSpeedFwd = MaxSpeed;
+constexpr int MaxSpeedBkwd = - MaxSpeed;
+constexpr int Speed90 = .9 * MaxSpeed;
+constexpr int Speed80 = .8 * MaxSpeed;
+constexpr int Speed70 = .7 * MaxSpeed;
+constexpr int Speed60 = .6 * MaxSpeed;
+constexpr int Speed50 = .5 * MaxSpeed;
+constexpr int Speed40 = .4 * MaxSpeed;
+constexpr int Speed30 = .3 * MaxSpeed;
+constexpr int Speed20 = .2 * MaxSpeed;
+constexpr int Speed10 = .1 * MaxSpeed;
+constexpr int Speed00 =  0;
 
-
-// State mowerState;
-#endif 
+#endif
